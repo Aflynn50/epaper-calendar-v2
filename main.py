@@ -1,5 +1,5 @@
 from display import generate_display
-import epd7in5_V2
+from waveshare import epd7in5_V2
 import logging
 
 def main():
