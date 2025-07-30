@@ -16,15 +16,15 @@ def draw_centered_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.Ima
 def generate_display():
     font24 = ImageFont.truetype(os.path.join(font_dir, 'Font.ttc'), 24)
     huristica24 = ImageFont.truetype(os.path.join(font_dir, 'Heuristica-Bold.otf'), 24)
-    bitmap = ImageFont.load(os.path.join(font_dir, 'ncenR18.pil'))
+    bitmap = ImageFont.load(os.path.join(font_dir, 'ncenB18.pil'))
 
     im = Image.new('1', (480, 800), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(im)
 
-    draw_centered_text(draw, todays_date(), bitmap, 0, WIDTH, 15)
+    draw_centered_text(draw, todays_date(), bitmap, 0, WIDTH, 35)
 
     # Title seperator
-    draw.line([(0, 60), (WIDTH, 60)], width=4)
+    draw.line([(0, 80), (WIDTH, 80)], width=3)
 
 
     return im

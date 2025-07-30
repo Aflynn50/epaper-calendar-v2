@@ -1,9 +1,11 @@
 from display import generate_display
 from waveshare import epd7in5_V2
+from PIL import Image
 import logging
 
 def main():
     im = generate_display()
+    im = im.transpose(Image.ROTATE_180)
 
     try:
         logging.info("epd7in5_V2 Demo")
