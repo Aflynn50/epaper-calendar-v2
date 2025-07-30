@@ -163,10 +163,6 @@ class RaspberryPi:
 
 
 
-
-
-
-
 if sys.version_info[0] == 2:
     process = subprocess.Popen("cat /proc/cpuinfo | grep Raspberry", shell=True, stdout=subprocess.PIPE)
 else:
