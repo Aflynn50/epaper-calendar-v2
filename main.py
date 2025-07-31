@@ -3,6 +3,8 @@ from waveshare import epd7in5_V2
 from PIL import Image
 import logging
 
+logging.basicConfig(level=logging.DEBUG)
+
 def main():
     im = generate_display()
     im = im.transpose(Image.ROTATE_180)
