@@ -28,8 +28,6 @@ weather_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
 time_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
 time_font_bold = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
 
-
-
 TITLE_SEPERATOR_HEIGHT = 105
 VIRTICLE_DATE_SEPERATOR = 53
 EVENT_SUMMARY_WRAP_LENGTH = WIDTH - 2*VIRTICLE_DATE_SEPERATOR - 35
@@ -58,14 +56,16 @@ def generate_display():
 
     # Weather seperator
     # draw.line([(70, WEATHER_SEPERATOR_HEIGHT), (WIDTH - 70, WEATHER_SEPERATOR_HEIGHT)], width=2)
-
-    draw_weather_card(im, draw, 20, WEATHER_SEPERATOR_HEIGHT + 40, {'time': "10:30", 'icon':"wi-cloud", "temperature": "12"}, weather_font)
+    downloaded_weather = download_weather()
+    x = 20
+    for weather in downloaded_weather[:4]:
+        draw_weather_card(im, draw, x, WEATHER_SEPERATOR_HEIGHT + 40, weather, weather_font)
+        x += 110
 
     return im
 
 def draw_weather_card(im, draw, x,y, weather, font):
     icon = Image.open(os.path.join(weather_icon_dir, weather['icon'] + ".png"))
-
     im.paste(icon, (x, y + 15))
 
     t = weather['time']

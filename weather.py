@@ -1,3 +1,4 @@
+from turtledemo.chaos import h
 from creds import OPENWEATHERMAP_API_KEY
 from pyowm.owm import OWM
 from pyowm.commons.exceptions import PyOWMError
@@ -30,17 +31,19 @@ def download_weather():
     owm = OWM(OPENWEATHERMAP_API_KEY)
     try:
         mgr = owm.weather_manager()
-        forecast = mgr.forecast_at_place("Edinburgh, GB", '3h', limit=5).forecast
+        forecast = mgr.forecast_at_place("Edinburgh, GB", '3h', limit=10).forecast
     except PyOWMError as e:
         logging.error(f"General PyOWM error: {e}")
 
     weather_to_display = []
     for weather in forecast:
-        weather_to_display.append({
-            'time': datetime.fromtimestamp(weather.reference_time(), zoneinfo.ZoneInfo('Europe/London')).strftime('%H:%M'),
-            'temperature': weather.temperature(unit='celsius')['temp'],
-            'icon': weather_icons[weather.weather_icon_name],
-        })
+        time = datetime.fromtimestamp(weather.reference_time(), zoneinfo.ZoneInfo('Europe/London'))
+        if time.time().hour >= 6: # If the forcast is before 6am, don't show it.
+            weather_to_display.append({
+                'time': time.strftime('%H:%M'),
+                'temperature': str(int(round(weather.temperature(unit='celsius')['temp']))),
+                'icon': weather_icons[weather.weather_icon_name],
+            })
 
     print(weather_to_display)
     return weather_to_display
