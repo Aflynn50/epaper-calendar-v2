@@ -1,0 +1,11 @@
+[Unit]
+Description=Updates Epaper display
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/home/aflynn/epaper-calendar-v2/venv/bin/python /home/aflynn/epaper-calendar-v2/main.py
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
