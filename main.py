@@ -30,6 +30,5 @@ def main():
         epd7in5_V2.epdconfig.module_exit(cleanup=True)
         exit()
 
-
 if __name__ == "__main__":
     main()

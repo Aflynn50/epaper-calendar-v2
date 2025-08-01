@@ -3,3 +3,5 @@ pillow
 vobject
 spidev
 gpiozero
+openmeteo_requests
+pyowm

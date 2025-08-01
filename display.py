@@ -5,6 +5,8 @@ from datetime import datetime, timedelta, time, date
 from caldav.davclient import get_davclient
 from caldav.lib.error import NotFoundError
 
+from weather import download_weather
+
 import os
 import logging
 
@@ -14,6 +16,7 @@ WIDTH = 480
 HEIGHT = 800
 
 font_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fonts')
+weather_icon_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'weather-icons')
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -22,11 +25,11 @@ summary_font = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
 date_font = ImageFont.load(os.path.join(font_dir, 'helvR24.pil'))
 date_day_font = ImageFont.load(os.path.join(font_dir, 'helvR10.pil'))
 time_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
-time_font_bold = ImageFont.load(os.path.join(font_dir, 'helvB14.pil'))
+time_font_bold = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
 
 
 
-TITLE_SEPERATOR_HEIGHT = 80
+TITLE_SEPERATOR_HEIGHT = 90
 VIRTICLE_DATE_SEPERATOR = 53
 EVENT_SUMMARY_WRAP_LENGTH = WIDTH - 2*VIRTICLE_DATE_SEPERATOR - 35
 CALENDAR_END_HEIGHT = 600
@@ -37,7 +40,7 @@ def generate_display():
     draw = ImageDraw.Draw(im)
 
     # Draw todays date.
-    draw_centered_text(draw, todays_date(), title_font, 0, WIDTH, 35)
+    draw_centered_text(draw, todays_date(), title_font, 0, WIDTH, 40)
 
     # Title seperator.
     # draw.line([(70, TITLE_SEPERATOR_HEIGHT), (WIDTH - 70, TITLE_SEPERATOR_HEIGHT)], width=3)
@@ -55,7 +58,22 @@ def generate_display():
     # Weather seperator
     # draw.line([(70, WEATHER_SEPERATOR_HEIGHT), (WIDTH - 70, WEATHER_SEPERATOR_HEIGHT)], width=2)
 
+    draw_weather_card(im, draw, 20, WEATHER_SEPERATOR_HEIGHT + 40, {'time': "10:30", 'icon':"wi-cloud", "temperature": "12"}, time_font)
+
     return im
+
+def draw_weather_card(im, draw, x,y, weather, font):
+    icon = Image.open(os.path.join(weather_icon_dir, weather['icon'] + ".png"))
+
+    im.paste(icon, (x, y + 15))
+
+    t = weather['time']
+    time_x = x + icon.size[0]/2 - font.getlength(t)/2
+    draw.text((time_x, y), weather['time'], font=font)
+
+    temp = weather['temperature'] + "°C"
+    temp_x = x + icon.size[0]/2 - font.getlength(temp)/2
+    draw.text((temp_x, y+110),temp, font=font)
 
 def todays_date():
     today = datetime.today()
@@ -105,16 +123,16 @@ def draw_event(draw, event, y):
     start_len = time_font_bold.getlength(start)
     end_len = time_font.getlength(end)
     draw.text((WIDTH - 15 - start_len, y), start, font=time_font_bold)
-    draw.text((WIDTH - 15 - end_len, y+15), end, font=time_font)
+    draw.text((WIDTH - 15 - end_len, y+25), end, font=time_font)
 
 def get_calendar_events():
-    logging.info("downloading calendar")
     downloaded_events = download_events()
 
     logging.info("constructing calendar events")
     return construct_events(downloaded_events)
 
 def download_events():
+    logging.info("downloading calendar: " + creds.CALDAV_URL)
     with get_davclient(username=creds.CALDAV_USERNAME, password=creds.CALDAV_PASSWORD, url=creds.CALDAV_URL) as client:
         my_principal = client.principal()
         try:
