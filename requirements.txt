@@ -1,0 +1,5 @@
+caldav
+pillow
+vobject
+spidev
+gpiozero

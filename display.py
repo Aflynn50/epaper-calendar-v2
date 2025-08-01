@@ -1,8 +1,6 @@
-from test.datetimetester import HOUR
 from PIL import Image, ImageDraw, ImageFont
 
 from datetime import datetime, timedelta, time, date
-from dateutil.tz import tzlocal
 
 from caldav.davclient import get_davclient
 from caldav.lib.error import NotFoundError
@@ -19,11 +17,11 @@ font_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fonts')
 
 logging.basicConfig(level=logging.DEBUG)
 
-summary_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
+summary_font = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
 date_font = ImageFont.load(os.path.join(font_dir, 'helvR24.pil'))
-date_day_font = ImageFont.load(os.path.join(font_dir, 'helvR08.pil'))
-time_font = ImageFont.load(os.path.join(font_dir, 'helvR12.pil'))
-time_font_bold = ImageFont.load(os.path.join(font_dir, 'helvB12.pil'))
+date_day_font = ImageFont.load(os.path.join(font_dir, 'helvR10.pil'))
+time_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
+time_font_bold = ImageFont.load(os.path.join(font_dir, 'helvB14.pil'))
 
 
 # draw_centered_text draws the given text in the center of the bounds x1 and x2
@@ -33,7 +31,8 @@ def draw_centered_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.Ima
     draw.text((x, y), text, font=font)
 
 TITLE_SEPERATOR_HEIGHT = 80
-VIRTICLE_DATE_SEPERATOR = 70
+VIRTICLE_DATE_SEPERATOR = 53
+
 def generate_display():
     font24 = ImageFont.truetype(os.path.join(font_dir, 'Font.ttc'), 24)
     huristica24 = ImageFont.truetype(os.path.join(font_dir, 'Heuristica-Bold.otf'), 24)
@@ -59,25 +58,25 @@ def generate_display():
     return im
 
 def display_events(draw, all_events):
-    y = TITLE_SEPERATOR_HEIGHT + 10
+    y = TITLE_SEPERATOR_HEIGHT 
     for day, events in all_events:
         y += 10
         display_date(draw, day, y)
         for event in events:
             display_event(draw, event, y)
-            y += 35
-            if y > HEIGHT - 100:
+            y += 40
+            if y > HEIGHT - 150:
                 return
 
 
 def display_date(draw, day, y):
-    draw.text((15,y-10), day.strftime('%d'), font=date_font)
-    draw.text((16,y+20), day.strftime('%a'), font=date_day_font)
+    draw.text((6,y), day.strftime('%d'), font=date_font)
+    draw.text((7,y+30), day.strftime('%a'), font=date_day_font)
 
 def display_event(draw, event, y):
     draw.text((VIRTICLE_DATE_SEPERATOR + 15, y), event['summary'], font=summary_font)
     if (event['start'] <= time(minute=1)) and (event['end'] >= time(hour=23, minute=59)):
-        start = "All day"
+        start = ""
         end  = ""
     else:
         start = event['start'].strftime('%H:%M')
