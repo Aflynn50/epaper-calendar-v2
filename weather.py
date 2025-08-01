@@ -1,4 +1,3 @@
-from turtledemo.chaos import h
 from creds import OPENWEATHERMAP_API_KEY
 from pyowm.owm import OWM
 from pyowm.commons.exceptions import PyOWMError
