@@ -3,7 +3,7 @@ from waveshare import epd7in5_V2
 from PIL import Image
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 def main():
     im = generate_display()
