@@ -1,4 +1,4 @@
-from urllib.request import requests
+import requests
 import logging
 
 def internet_available() -> bool:
