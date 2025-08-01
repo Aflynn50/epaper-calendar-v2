@@ -24,23 +24,24 @@ title_font = ImageFont.load(os.path.join(font_dir, 'ncenB18.pil'))
 summary_font = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
 date_font = ImageFont.load(os.path.join(font_dir, 'helvR24.pil'))
 date_day_font = ImageFont.load(os.path.join(font_dir, 'helvR10.pil'))
+weather_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
 time_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
 time_font_bold = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
 
 
 
-TITLE_SEPERATOR_HEIGHT = 90
+TITLE_SEPERATOR_HEIGHT = 105
 VIRTICLE_DATE_SEPERATOR = 53
 EVENT_SUMMARY_WRAP_LENGTH = WIDTH - 2*VIRTICLE_DATE_SEPERATOR - 35
 CALENDAR_END_HEIGHT = 600
-WEATHER_SEPERATOR_HEIGHT = 600
+WEATHER_SEPERATOR_HEIGHT = 575
 
 def generate_display():
     im = Image.new('1', (480, 800), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(im)
 
     # Draw todays date.
-    draw_centered_text(draw, todays_date(), title_font, 0, WIDTH, 40)
+    draw_centered_text(draw, todays_date(), title_font, 0, WIDTH, 50)
 
     # Title seperator.
     # draw.line([(70, TITLE_SEPERATOR_HEIGHT), (WIDTH - 70, TITLE_SEPERATOR_HEIGHT)], width=3)
@@ -58,7 +59,7 @@ def generate_display():
     # Weather seperator
     # draw.line([(70, WEATHER_SEPERATOR_HEIGHT), (WIDTH - 70, WEATHER_SEPERATOR_HEIGHT)], width=2)
 
-    draw_weather_card(im, draw, 20, WEATHER_SEPERATOR_HEIGHT + 40, {'time': "10:30", 'icon':"wi-cloud", "temperature": "12"}, time_font)
+    draw_weather_card(im, draw, 20, WEATHER_SEPERATOR_HEIGHT + 40, {'time': "10:30", 'icon':"wi-cloud", "temperature": "12"}, weather_font)
 
     return im
 
