@@ -16,10 +16,9 @@ HEIGHT = 800
 font_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fonts')
 weather_icon_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'weather-icons')
 
-logging.basicConfig(level=logging.DEBUG)
-
 title_font = ImageFont.load(os.path.join(font_dir, 'ncenB18.pil'))
-summary_font = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
+#summary_font = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
+summary_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=22)
 date_font = ImageFont.load(os.path.join(font_dir, 'helvR24.pil'))
 date_day_font = ImageFont.load(os.path.join(font_dir, 'helvR10.pil'))
 weather_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
