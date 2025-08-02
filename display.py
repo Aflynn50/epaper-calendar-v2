@@ -16,20 +16,25 @@ HEIGHT = 800
 font_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fonts')
 weather_icon_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'weather-icons')
 
-title_font = ImageFont.load(os.path.join(font_dir, 'ncenB18.pil'))
+# title_font = ImageFont.load(os.path.join(font_dir, 'ncenB18.pil'))
+title_font = ImageFont.truetype(os.path.join(font_dir, 'ManufacturingConsent-Regular.ttf'), size=35)
 #summary_font = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
-summary_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=22)
-date_font = ImageFont.load(os.path.join(font_dir, 'helvR24.pil'))
-date_day_font = ImageFont.load(os.path.join(font_dir, 'helvR10.pil'))
-weather_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
-time_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
-time_font_bold = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
+summary_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=20)
+#date_font = ImageFont.load(os.path.join(font_dir, 'helvR24.pil'))
+date_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=31)
+#date_day_font = ImageFont.load(os.path.join(font_dir, 'helvR10.pil'))
+date_day_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_book.otf'), size=14)
+#weather_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
+weather_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=20)
+#time_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
+#time_font_bold = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
+time_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=16)
+time_font_bold = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_bold.otf'), size=18)
 
-TITLE_SEPERATOR_HEIGHT = 105
+TITLE_SEPERATOR_HEIGHT = 130
 VIRTICLE_DATE_SEPERATOR = 53
 EVENT_SUMMARY_WRAP_LENGTH = WIDTH - 2*VIRTICLE_DATE_SEPERATOR - 35
-CALENDAR_END_HEIGHT = 600
-WEATHER_SEPERATOR_HEIGHT = 575
+WEATHER_SEPERATOR_HEIGHT = 600
 
 def generate_display():
     im = Image.new('1', (480, 800), 255)  # 255: clear the frame
@@ -65,12 +70,12 @@ def generate_display():
 def draw_weather(im, draw, downloaded_weather):
     x = 20
     for weather in downloaded_weather[:4]:
-        draw_weather_card(im, draw, x, WEATHER_SEPERATOR_HEIGHT + 40, weather, weather_font)
+        draw_weather_card(im, draw, x, WEATHER_SEPERATOR_HEIGHT + 35, weather, weather_font)
         x += 110
 
 def draw_weather_card(im, draw, x,y, weather, font):
     icon = Image.open(os.path.join(weather_icon_dir, weather['icon'] + ".png"))
-    im.paste(icon, (x, y + 15))
+    im.paste(icon, (x, y + 20))
 
     t = weather['time']
     time_x = x + icon.size[0]/2 - font.getlength(t)/2
@@ -107,10 +112,10 @@ def draw_calendar_events(draw, all_events):
         y += 10
         draw_date(draw, day, y)
         for event in events:
-            if y+40 > WEATHER_SEPERATOR_HEIGHT:
+            if y+45 > WEATHER_SEPERATOR_HEIGHT:
                 return
             draw_event(draw, event, y)
-            y += 50
+            y += 45
 
 def draw_date(draw, day, y):
     draw.text((6,y), day.strftime('%d'), font=date_font)
@@ -128,7 +133,7 @@ def draw_event(draw, event, y):
     start_len = time_font_bold.getlength(start)
     end_len = time_font.getlength(end)
     draw.text((WIDTH - 15 - start_len, y), start, font=time_font_bold)
-    draw.text((WIDTH - 15 - end_len, y+25), end, font=time_font)
+    draw.text((WIDTH - 15 - end_len, y+22), end, font=time_font)
 
 if __name__ == "__main__":
     im = generate_display()
