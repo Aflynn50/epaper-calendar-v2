@@ -115,7 +115,7 @@ def draw_calendar_events(draw, all_events):
             if y+45 > WEATHER_SEPERATOR_HEIGHT:
                 return
             draw_event(draw, event, y)
-            y += 45
+            y += 55 # 45 + 10
 
 def draw_date(draw, day, y):
     draw.text((6,y), day.strftime('%d'), font=date_font)
