@@ -2,6 +2,7 @@ from display import generate_display
 from waveshare import epd7in5_V2
 from PIL import Image
 import logging
+from datetime import datetime, time
 
 logging.basicConfig(level=logging.INFO)
 
@@ -13,9 +14,11 @@ def main():
         logging.info("epd7in5_V2 Demo")
         epd = epd7in5_V2.EPD()
 
-        logging.info("init and Clear")
-        epd.init()
-        epd.Clear()
+        now = datetime.now().time()
+        if  now > time(hour=1) and now < time(hour=3): # Reset the display in the early hours of the morning.
+            logging.info("init and Clear")
+            epd.init()
+            epd.Clear()
 
         epd.display(epd.getbuffer(im))
 
