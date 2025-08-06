@@ -34,7 +34,7 @@ time_font_bold = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_bold.otf')
 TITLE_SEPERATOR_HEIGHT = 130
 VIRTICLE_DATE_SEPERATOR = 53
 EVENT_SUMMARY_WRAP_LENGTH = WIDTH - 2*VIRTICLE_DATE_SEPERATOR - 35
-WEATHER_SEPERATOR_HEIGHT = 600
+WEATHER_SEPERATOR_HEIGHT = 620
 
 def generate_display():
     im = Image.new('1', (480, 800), 255)  # 255: clear the frame
@@ -51,7 +51,7 @@ def generate_display():
     # draw.line([(70, TITLE_SEPERATOR_HEIGHT), (WIDTH - 70, TITLE_SEPERATOR_HEIGHT)], width=3)
 
     # Vertical date seperator
-    draw.line([(VIRTICLE_DATE_SEPERATOR, TITLE_SEPERATOR_HEIGHT + 20 ), (VIRTICLE_DATE_SEPERATOR, WEATHER_SEPERATOR_HEIGHT - 5)], width=2)
+    draw.line([(VIRTICLE_DATE_SEPERATOR, TITLE_SEPERATOR_HEIGHT + 20 ), (VIRTICLE_DATE_SEPERATOR, WEATHER_SEPERATOR_HEIGHT - 20)], width=2)
 
     # Draw text wrap position
     # draw.line([(VIRTICLE_DATE_SEPERATOR+15+EVENT_SUMMARY_WRAP_LENGTH, TITLE_SEPERATOR_HEIGHT), (VIRTICLE_DATE_SEPERATOR+15+EVENT_SUMMARY_WRAP_LENGTH, HEIGHT)], width=3)
@@ -70,7 +70,7 @@ def generate_display():
 def draw_weather(im, draw, downloaded_weather):
     x = 20
     for weather in downloaded_weather[:4]:
-        draw_weather_card(im, draw, x, WEATHER_SEPERATOR_HEIGHT + 35, weather, weather_font)
+        draw_weather_card(im, draw, x, WEATHER_SEPERATOR_HEIGHT + 20, weather, weather_font)
         x += 110
 
 def draw_weather_card(im, draw, x,y, weather, font):
@@ -110,12 +110,14 @@ def draw_calendar_events(draw, all_events):
     y = TITLE_SEPERATOR_HEIGHT
     for day, events in all_events:
         y += 10
+        if y+55 > WEATHER_SEPERATOR_HEIGHT:
+            return
         draw_date(draw, day, y)
         for event in events:
             if y+45 > WEATHER_SEPERATOR_HEIGHT:
                 return
             draw_event(draw, event, y)
-            y += 55 # 45 + 10
+            y += 45
 
 def draw_date(draw, day, y):
     draw.text((6,y), day.strftime('%d'), font=date_font)
