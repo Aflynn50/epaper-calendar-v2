@@ -19,7 +19,7 @@ weather_icon_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'wea
 # title_font = ImageFont.load(os.path.join(font_dir, 'ncenB18.pil'))
 title_font = ImageFont.truetype(os.path.join(font_dir, 'ManufacturingConsent-Regular.ttf'), size=35)
 #summary_font = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
-summary_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=20)
+summary_font = ImageFont.truetype(os.path.join(font_dir, 'GothamRnd-Medium-Emoji.ttf'), size=20)
 #date_font = ImageFont.load(os.path.join(font_dir, 'helvR24.pil'))
 date_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=31)
 #date_day_font = ImageFont.load(os.path.join(font_dir, 'helvR10.pil'))
@@ -138,5 +138,6 @@ def draw_event(draw, event, y):
     draw.text((WIDTH - 15 - end_len, y+22), end, font=time_font)
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     im = generate_display()
     im.show()

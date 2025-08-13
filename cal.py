@@ -16,20 +16,23 @@ def get_calendar_events():
 def download_events():
     logging.info("downloading calendar: " + creds.CALDAV_URL)
     with get_davclient(username=creds.CALDAV_USERNAME, password=creds.CALDAV_PASSWORD, url=creds.CALDAV_URL) as client:
-        my_principal = client.principal()
         try:
-            my_calendar = my_principal.calendar()
-            logging.info("calendar was found")
-        except NotFoundError:
-            logging.error("cannot fetch calendar")
+            my_calendars = client.principal().calendars()
+            logging.info("calendars found")
+            now = datetime.now()
+            events = []
+            for my_calendar in my_calendars:
+                if my_calendar.id in creds.CALDAV_CALENDAR_IDS:
+                    logging.info("fetching events from caledar: " + my_calendar.id)
+                    events += my_calendar.search(
+                        start=now,
+                        end=now+timedelta(days=30),
+                        event=True,
+                        expand=True,
+                    )
+        except NotFoundError as e:
+            logging.error("cannot fetch calendar: " + str(e))
             return []
-        now = datetime.now()
-        events = my_calendar.search(
-            start=datetime.now(),
-            end=now+timedelta(days=30),
-            event=True,
-            expand=True,
-        )
         return events
 
 # Group the events by day and split multiday events accross days.

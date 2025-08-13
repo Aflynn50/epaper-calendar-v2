@@ -44,7 +44,6 @@ def download_weather():
                 'icon': weather_icons[weather.weather_icon_name],
             })
 
-    print(weather_to_display)
     return weather_to_display
 
 
