@@ -7,18 +7,18 @@ from datetime import datetime, time
 logging.basicConfig(level=logging.INFO)
 
 def main():
+    logging.info("GENERATING E-PAPER DISPLAY AT: " + datetime.now().strftime("%X %x"))
     im = generate_display()
     im = im.transpose(Image.ROTATE_180)
 
     try:
-        logging.info("epd7in5_V2 Demo")
+        logging.info("epd7in5_V2 display refresh")
         epd = epd7in5_V2.EPD()
 
         now = datetime.now().time()
-        if  now > time(hour=1) and now < time(hour=3): # Reset the display in the early hours of the morning.
-            logging.info("init and Clear")
-            epd.init()
-            epd.Clear()
+        logging.info("Init and Clear")
+        epd.init()
+        epd.Clear()
 
         epd.display(epd.getbuffer(im))
 

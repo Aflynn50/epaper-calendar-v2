@@ -27,6 +27,7 @@ weather_icons = {
 }
 
 def download_weather():
+    logging.info("downloading weather from openweathermap")
     owm = OWM(OPENWEATHERMAP_API_KEY)
     try:
         mgr = owm.weather_manager()
@@ -34,6 +35,7 @@ def download_weather():
     except PyOWMError as e:
         logging.error(f"General PyOWM error: {e}")
 
+    logging.info("processing weather")
     weather_to_display = []
     for weather in forecast:
         time = datetime.fromtimestamp(weather.reference_time(), zoneinfo.ZoneInfo('Europe/London'))
