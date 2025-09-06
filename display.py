@@ -34,6 +34,7 @@ time_font_bold = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_bold.otf')
 TITLE_SEPERATOR_HEIGHT = 130
 VIRTICLE_DATE_SEPERATOR = 53
 EVENT_SUMMARY_WRAP_LENGTH = WIDTH - 2*VIRTICLE_DATE_SEPERATOR - 35
+RIGHT_EDGE = WIDTH - 15
 WEATHER_SEPERATOR_HEIGHT = 620
 
 def generate_display():
@@ -124,18 +125,32 @@ def draw_date(draw, day, y):
     draw.text((7,y+30), day.strftime('%a'), font=date_day_font)
 
 def draw_event(draw, event, y):
-    draw_wrapped_text(draw, VIRTICLE_DATE_SEPERATOR + 15, y, event['summary'], summary_font, EVENT_SUMMARY_WRAP_LENGTH)
-
-    if (event['start'] <= time(minute=1)) and (event['end'] >= time(hour=23, minute=59)):
-        start = ""
-        end  = ""
+    start = event['start']
+    end = event['end']
+    if (start.time() <= time(minute=1)) and (end.time() >= time(hour=23, minute=59)):
+        # All day events.
+        if event['end'].date() > event['start'].date():
+            # Handle multiday events.
+            start_text = start.strftime('%a %d')
+            end_text = end.strftime('%a %d')
+        else:
+            start_text = ""
+            end_text  = ""
     else:
-        start = event['start'].strftime('%H:%M')
-        end = event['end'].strftime('%H:%M')
-    start_len = time_font_bold.getlength(start)
-    end_len = time_font.getlength(end)
-    draw.text((WIDTH - 15 - start_len, y), start, font=time_font_bold)
-    draw.text((WIDTH - 15 - end_len, y+22), end, font=time_font)
+        # Normal events.
+        start_text = start.strftime('%H:%M')
+        if end.date() > start.date():
+            # Handle multiday events.
+            end_text = end.strftime('%H:%M (%a %d)')
+        else:
+            end_text = end.strftime('%H:%M')
+
+    start_len = time_font_bold.getlength(start_text)
+    end_len = time_font.getlength(end_text)
+    wrap_len = RIGHT_EDGE - max(start_len, end_len)
+    draw_wrapped_text(draw, VIRTICLE_DATE_SEPERATOR + 15, y, event['summary'], summary_font, wrap_len)
+    draw.text((RIGHT_EDGE - start_len, y), start_text, font=time_font_bold)
+    draw.text((RIGHT_EDGE - end_len, y+22), end_text, font=time_font)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)

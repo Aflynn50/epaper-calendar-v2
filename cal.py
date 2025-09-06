@@ -7,6 +7,8 @@ from datetime import datetime, timedelta, time, date
 
 import creds
 
+todays_date = datetime.now().date()
+
 def get_calendar_events():
     downloaded_events = download_events()
 
@@ -41,6 +43,7 @@ def construct_events(downloaded_events):
     for event in downloaded_events:
         e = event.vobject_instance.vevent
         logging.info("processing event: " + e.summary.value + " " + str(e.dtstart.value) + " " + str(e.dtend.value))
+        # Process all day event and events including a start and end time.
         if type(e.dtstart.value) is datetime:
             if type(e.dtend.value) is not datetime:
                 logging.error("event start is datetime but end is " + str(type(e.dtend.value)))
@@ -51,32 +54,34 @@ def construct_events(downloaded_events):
                 logging.error("event start is date but end is " + str(type(e.dtend.value)))
                 return {}
             add_date_event(events_by_day, e)
+        else:
+            logging.error("skipping unknown event type: " + str(type(e.dtstart.value)))
 
     logging.info("sorting events")
     for day, events in events_by_day.items():
-        events_by_day[day] = sorted(events, key=lambda d: d['start'])
+        events_by_day[day] = sorted(events, key=lambda d: d['start'].time())
     sorted_events = sorted(events_by_day.items())
     return sorted_events
 
 def add_date_event(dict, e):
     e_start = e.dtstart.value
-    e_end = e.dtend.value
-    while e_start != (e_end - timedelta(days=1)):
-        add_event(dict, e_start, e.summary.value, time.min, time.max)
-        e_start = e_start + timedelta(days=1)
-    add_event(dict, e_start, e.summary.value, time.min, time.max)
+    # With date events an all day event has its end on the next day. Correct that by subtracting a day
+    e_end = e.dtend.value - timedelta(days=1)
+    if e_start < todays_date:
+        e_start = todays_date
+    add_event(dict, e_start, e.summary.value, datetime.combine(e_start,time.min), datetime.combine(e_end, time.max))
 
+# Add an event including a start and end time.
 def add_datetime_event(dict, e):
     e_start = e.dtstart.value
     e_end = e.dtend.value
-    while e_start.date() != e_end.date():
-        add_event(dict, e_start.date(), e.summary.value, e_start.time(), time.max)
-        # Get the start of the next day.
-        e_start = e_start.replace(hour=0,minute=0,second=0,microsecond=0) + timedelta(days=1)
-    add_event(dict, e_start.date(), e.summary.value, e_start.time(), e_end.time())
+    if e_start.date() < todays_date:
+        e_start = datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
+    add_event(dict, e_start.date(), e.summary.value, e_start, e_end)
 
+# Add the event if it is in the future.
 def add_event(dict, date, summary, start, end):
-    if date >= datetime.now().date():
+    if date >= todays_date:
         if date in dict:
             dict[date].append({'summary':summary,'start': start,'end': end})
         else:
