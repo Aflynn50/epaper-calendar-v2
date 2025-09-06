@@ -66,12 +66,12 @@ def generate_display():
 def draw_weather(im, draw, downloaded_weather):
     x = 20
     for weather in downloaded_weather[:4]:
-        draw_weather_card(im, draw, x, WEATHER_SEPERATOR_HEIGHT + 20, weather, weather_font)
+        draw_weather_card(im, draw, x, WEATHER_SEPERATOR_HEIGHT + 15, weather, weather_font)
         x += 110
 
 def draw_weather_card(im, draw, x,y, weather, font):
     icon = Image.open(os.path.join(weather_icon_dir, weather['icon'] + ".png"))
-    im.paste(icon, (x, y + 20))
+    im.paste(icon, (x, y + 25))
 
     t = weather['time']
     time_x = x + icon.size[0]/2 - font.getlength(t)/2
@@ -79,7 +79,7 @@ def draw_weather_card(im, draw, x,y, weather, font):
 
     temp = weather['temperature'] + "°C"
     temp_x = x + icon.size[0]/2 - font.getlength(temp)/2
-    draw.text((temp_x, y+110),temp, font=font)
+    draw.text((temp_x, y+115),temp, font=font)
 
 def draw_title(draw):
     today = datetime.today()
