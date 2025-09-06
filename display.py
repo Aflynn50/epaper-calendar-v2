@@ -16,26 +16,20 @@ HEIGHT = 800
 font_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fonts')
 weather_icon_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'weather-icons')
 
-# title_font = ImageFont.load(os.path.join(font_dir, 'ncenB18.pil'))
 title_font = ImageFont.truetype(os.path.join(font_dir, 'ManufacturingConsent-Regular.ttf'), size=35)
-#summary_font = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
-summary_font = ImageFont.truetype(os.path.join(font_dir, 'GothamRnd-Medium-Emoji.ttf'), size=20)
-#date_font = ImageFont.load(os.path.join(font_dir, 'helvR24.pil'))
+summary_font = ImageFont.truetype(os.path.join(font_dir, 'GothamRnd-Medium-Emoji.ttf'), size=25)
 date_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=31)
-#date_day_font = ImageFont.load(os.path.join(font_dir, 'helvR10.pil'))
 date_day_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_book.otf'), size=14)
-#weather_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
-weather_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=20)
-#time_font = ImageFont.load(os.path.join(font_dir, 'helvR14.pil'))
-#time_font_bold = ImageFont.load(os.path.join(font_dir, 'helvR18.pil'))
-time_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=16)
-time_font_bold = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_bold.otf'), size=18)
+weather_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=24)
+time_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=20)
+time_font_bold = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_bold.otf'), size=22)
 
 TITLE_SEPERATOR_HEIGHT = 130
 VIRTICLE_DATE_SEPERATOR = 53
 EVENT_SUMMARY_WRAP_LENGTH = WIDTH - 2*VIRTICLE_DATE_SEPERATOR - 35
 RIGHT_EDGE = WIDTH - 15
 WEATHER_SEPERATOR_HEIGHT = 620
+EVENT_HEIGHT = 55
 
 def generate_display():
     im = Image.new('1', (480, 800), 255)  # 255: clear the frame
@@ -107,18 +101,19 @@ def draw_centered_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.Ima
     x = x1 + (x2-x1)/2 - text_length/2
     draw.text((x, y), text, font=font)
 
+
 def draw_calendar_events(draw, all_events):
     y = TITLE_SEPERATOR_HEIGHT
     for day, events in all_events:
         y += 10
-        if y+55 > WEATHER_SEPERATOR_HEIGHT:
+        if y+EVENT_HEIGHT+10 > WEATHER_SEPERATOR_HEIGHT:
             return
         draw_date(draw, day, y)
         for event in events:
-            if y+45 > WEATHER_SEPERATOR_HEIGHT:
+            if y+EVENT_HEIGHT > WEATHER_SEPERATOR_HEIGHT:
                 return
             draw_event(draw, event, y)
-            y += 45
+            y += EVENT_HEIGHT
 
 def draw_date(draw, day, y):
     draw.text((6,y), day.strftime('%d'), font=date_font)
@@ -150,7 +145,7 @@ def draw_event(draw, event, y):
     wrap_len = RIGHT_EDGE - max(start_len, end_len)
     draw_wrapped_text(draw, VIRTICLE_DATE_SEPERATOR + 15, y, event['summary'], summary_font, wrap_len)
     draw.text((RIGHT_EDGE - start_len, y), start_text, font=time_font_bold)
-    draw.text((RIGHT_EDGE - end_len, y+22), end_text, font=time_font)
+    draw.text((RIGHT_EDGE - end_len, y+26), end_text, font=time_font)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
