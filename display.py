@@ -16,7 +16,8 @@ HEIGHT = 800
 font_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fonts')
 weather_icon_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'weather-icons')
 
-title_font = ImageFont.truetype(os.path.join(font_dir, 'ManufacturingConsent-Regular.ttf'), size=35)
+title_day_font = ImageFont.truetype(os.path.join(font_dir, 'ManufacturingConsent-Regular.ttf'), size=50)
+title_font = ImageFont.truetype(os.path.join(font_dir, 'ManufacturingConsent-Regular.ttf'), size=38)
 summary_font = ImageFont.truetype(os.path.join(font_dir, 'GothamRnd-Medium-Emoji.ttf'), size=25)
 date_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_medium.otf'), size=31)
 date_day_font = ImageFont.truetype(os.path.join(font_dir, 'gothamrnd_book.otf'), size=14)
@@ -39,8 +40,8 @@ def generate_display():
         draw_centered_text(draw, "No internet!", title_font, 0, WIDTH, 150)
         return im
 
-    # Draw todays date.
-    draw_centered_text(draw, todays_date(), title_font, 0, WIDTH, 50)
+    # Draw title.
+    draw_title(draw)
 
     # Title seperator.
     # draw.line([(70, TITLE_SEPERATOR_HEIGHT), (WIDTH - 70, TITLE_SEPERATOR_HEIGHT)], width=3)
@@ -80,11 +81,15 @@ def draw_weather_card(im, draw, x,y, weather, font):
     temp_x = x + icon.size[0]/2 - font.getlength(temp)/2
     draw.text((temp_x, y+110),temp, font=font)
 
-def todays_date():
+def draw_title(draw):
     today = datetime.today()
     day_ending = {1: 'st', 2: 'nd', 3: 'rd', 21: 'st', 22: 'nd', 23: 'rd', 31: 'st'}.get(today.day, 'th')
-    date = datetime.today().strftime('%A the ' + str(today.day) + day_ending +' of %B %Y')
-    return date
+
+    day = today.strftime('%A')
+    date = today.strftime('The ' + str(today.day) + day_ending +' of %B %Y')
+
+    draw_centered_text(draw, day, title_day_font, 0, WIDTH, 24)
+    draw_centered_text(draw, date, title_font, 0, WIDTH, 82)
 
 def draw_wrapped_text(draw, x, y, text, font, wrap_length):
     if font.getlength(text) <= wrap_length:
