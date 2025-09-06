@@ -145,10 +145,11 @@ def draw_event(draw, event, y):
         else:
             end_text = end.strftime('%H:%M')
 
+    x_pos = VIRTICLE_DATE_SEPERATOR + 15
     start_len = time_font_bold.getlength(start_text)
     end_len = time_font.getlength(end_text)
-    wrap_len = RIGHT_EDGE - max(start_len, end_len)
-    draw_wrapped_text(draw, VIRTICLE_DATE_SEPERATOR + 15, y, event['summary'], summary_font, wrap_len)
+    wrap_len = RIGHT_EDGE - max(start_len, end_len) - x_pos
+    draw_wrapped_text(draw, x_pos, y, event['summary'], summary_font, wrap_len)
     draw.text((RIGHT_EDGE - start_len, y), start_text, font=time_font_bold)
     draw.text((RIGHT_EDGE - end_len, y+26), end_text, font=time_font)
 
